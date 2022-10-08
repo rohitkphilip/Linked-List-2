@@ -1,53 +1,43 @@
-# // Time Complexity : O(n)
+# // Time Complexity : O(m+n)
 # // Space Complexity : O(1)
 # // Did this code successfully run on Leetcode : Yes
 # // Any problem you faced while coding this :
 from typing import Optional
 class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-class Solution:
-    def reorderList(self, head: Optional[ListNode]) -> None:
-        """
-        Do not return anything, modify head in-place instead.
-        """
-        slow = head
-        fast = head
-        
-        #find middle of the list
-        while(fast.next and fast.next.next):
-            slow = slow.next
-            fast = fast.next.next
+    def __init__(self, x):
+        self.val = x
+        self.next = None
 
-        #reverse the second half
-        head2 = self.reverseList(slow.next)
-        slow.next = None
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        if not headA or not headB:
+            return None
         
-        #reorder list
-        p1 = head
-        temp = p1.next
-        p2 = head2
+        lenA = 0
+        lenB = 0
         
-        while(p2):
-            p1.next = p2
-            p2 = p2.next
-            p1.next.next = temp
-            p1 = temp
-            if temp:
-                temp = temp.next
-                
+        #find length of A
+        curr = headA
+        while curr:
+            lenA += 1
+            curr = curr.next
             
-    def reverseList(self, head: Optional[ListNode]):
-        if not head or not head.next:
-            return head
-        prev = None
-        cur = head
-        while(cur):
-            temp = cur.next 
-            cur.next = prev
-            prev = cur
-            cur = temp
+        #find length of B
+        curr = headB
+        while curr:
+            lenB += 1
+            curr = curr.next
+            
+        while lenA > lenB:
+            headA = headA.next
+            lenA -= 1
+            
+        while lenB > lenA:
+            headB = headB.next
+            lenB -= 1
+            
+        while not (headA == headB):
+            headA = headA.next
+            headB = headB.next
         
-        return prev
-        
+        return headA
